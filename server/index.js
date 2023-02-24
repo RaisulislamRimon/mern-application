@@ -7,6 +7,7 @@ const require = createRequire(import.meta.url);
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import userRouter from "./routes/user.js";
 
 require("dotenv").config();
 dotenv.config();
@@ -21,33 +22,34 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
-const MONGODB_URL = `mongodb+srv://${process.env.VITE_USERNAME}:${process.env.VITE_PASSWORD}@cluster0.wnkrgxk.mongodb.net/?retryWrites=true&w=majority`;
+// const MONGODB_URL = `mongodb://localhost:27017, {useNewUrlParser: true}`;
+// const MONGODB_URL = `127.0.0.1`;
+// const MONGODB_URL = `mongodb://localhost:27017/?directConnection=true`;
+// const MONGODB_URL = `mongodb://localhost:27017`;
 
-const client = new MongoClient(MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
+// const MONGODB_URL = `mongodb+srv://${process.env.VITE_USERNAME}:${process.env.VITE_PASSWORD}@cluster0.wnkrgxk.mongodb.net/?retryWrites=true&w=majority`;
 
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  // client.close();
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
+// const client = new MongoClient(MONGODB_URL, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   serverApi: ServerApiVersion.v1,
 // });
 
-mongoose.set("strictQuery", false);
-// mongoose.set("strictQuery", true);
+// const MONGODB_URL = `mongodb://localhost:27017/mern-app`;
+const MONGODB_URL = `mongodb://127.0.0.1:27017/mern-app`;
+
+//const client = new MongoClient(MONGODB_URL, {
+// useNewUrlParser: true,
+//  useUnifiedTopology: true,
+// serverApi: ServerApiVersion.v1,
+//});
 
 mongoose
-  .connect(MONGODB_URL)
+  .connect(MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // useCreateIndex: true,
+  })
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server running on port: ${PORT}`);
@@ -57,3 +59,22 @@ mongoose
     console.log(`${error} did not connect`);
     console.log(error.message);
   });
+
+mongoose.set("strictQuery", false);
+// mongoose.set("strictQuery", true);
+
+// client.connect((err) => {
+//   const collection = client.db("mern-app").collection("files");
+//   // perform actions on the collection object
+//   // client.close();
+// });
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.use("/users", userRouter); // http://localhost:5000/users/signup
+
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
