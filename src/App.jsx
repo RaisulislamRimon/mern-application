@@ -3,13 +3,23 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
-    <div className="App">
-      <ToastContainer />
-      <h1>Hello React With Vite</h1>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <ToastContainer />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
